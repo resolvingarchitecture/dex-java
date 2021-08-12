@@ -11,12 +11,12 @@
 
 	<name>ra-dex</name>
 	<url>https://resolvingarchitecture.io</url>
-	<description>Resolving Architecture - Decencentralized EXchange Client Java</description>
+	<description>Resolving Architecture - Decencentralized EXchange Java</description>
 	<inceptionYear>2020</inceptionYear>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>1.11</java.version>
 	</properties>
 
 	<developers>
@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>resolvingarchitecture</groupId>
 			<artifactId>common</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.7</version>
 		</dependency>
 
 		<!-- Test -->
