@@ -2,10 +2,14 @@ package ra.dex;
 
 import ra.common.Envelope;
 import ra.common.messaging.MessageProducer;
+import ra.common.network.NetworkPeer;
 import ra.common.route.Route;
 import ra.common.service.BaseService;
+import ra.common.service.Service;
 import ra.common.service.ServiceStatusObserver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -15,6 +19,7 @@ public class DEXService extends BaseService {
 
     private static final Logger LOG = Logger.getLogger(DEXService.class.getName());
 
+    // Request Network Peers running DEX Service
     public static final String OPERATION_REQUEST_DEX_PEERS_LIST = "REQUEST_DEX_PEERS_LIST";
     public static final String OPERATION_RESPONSE_DEX_PEERS_LIST = "RESPONSE_DEX_PEERS_LIST";
     public static final String OPERATION_REQUEST_OFFERS_LIST = "REQUEST_OFFERS_LIST";
@@ -25,6 +30,8 @@ public class DEXService extends BaseService {
 
     public static final String OPERATION_ACCEPT_OFFER = "ACCEPT_OFFER";
     public static final String OPERATION_ACCEPTANCE_ACCEPTED = "ACCEPTANCE_ACCEPTED";
+
+    private List<NetworkPeer> dexPeers;
 
     public DEXService() {
     }
@@ -39,11 +46,11 @@ public class DEXService extends BaseService {
         String operation = route.getOperation();
         switch(operation) {
             case OPERATION_REQUEST_DEX_PEERS_LIST: {
-
+                updateDEXPeersList();
                 break;
             }
             case OPERATION_RESPONSE_DEX_PEERS_LIST: {
-
+                dexPeers = (List<NetworkPeer>)e.getValue(NetworkPeer.class.getName());
                 break;
             }
             case OPERATION_REQUEST_OFFERS_LIST: {
@@ -73,6 +80,14 @@ public class DEXService extends BaseService {
             default:
                 deadLetter(e); // Operation not supported
         }
+    }
+
+    private void updateDEXPeersList() {
+        Envelope request = Envelope.documentFactory();
+        request.addNVP(Service.class.getName(), DEXService.class.getName());
+        request.addRoute(DEXService.class.getName(), OPERATION_RESPONSE_DEX_PEERS_LIST);
+        request.addRoute("ra.networkmanager.NetworkManagerService", "PEERS_BY_SERVICE");
+        send(request);
     }
 
 }
