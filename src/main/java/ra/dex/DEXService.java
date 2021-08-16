@@ -6,12 +6,10 @@ import ra.common.network.NetworkPeer;
 import ra.common.route.Route;
 import ra.common.service.BaseService;
 import ra.common.service.Service;
+import ra.common.service.ServiceStatus;
 import ra.common.service.ServiceStatusObserver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -113,4 +111,38 @@ public class DEXService extends BaseService {
         send(request);
     }
 
+    @Override
+    public boolean start(Properties p) {
+        LOG.info("Starting...");
+        updateStatus(ServiceStatus.STARTING);
+        if(!super.start(p))
+            return false;
+        LOG.info("Loading properties...");
+
+        updateStatus(ServiceStatus.RUNNING);
+        LOG.info("Started.");
+        return true;
+    }
+
+    @Override
+    public boolean shutdown() {
+        LOG.info("Shutting down...");
+        updateStatus(ServiceStatus.SHUTTING_DOWN);
+
+
+        updateStatus(ServiceStatus.SHUTDOWN);
+        LOG.info("Shutdown.");
+        return true;
+    }
+
+    @Override
+    public boolean gracefulShutdown() {
+        LOG.info("Gracefully shutting down...");
+        updateStatus(ServiceStatus.GRACEFULLY_SHUTTING_DOWN);
+
+
+        updateStatus(ServiceStatus.GRACEFULLY_SHUTDOWN);
+        LOG.info("Gracefully shutdown.");
+        return true;
+    }
 }
