@@ -9,7 +9,9 @@ import ra.common.service.Service;
 import ra.common.service.ServiceStatusObserver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -32,6 +34,8 @@ public class DEXService extends BaseService {
     public static final String OPERATION_ACCEPTANCE_ACCEPTED = "ACCEPTANCE_ACCEPTED";
 
     private List<NetworkPeer> dexPeers;
+    private List<Offer> localOffers = new ArrayList<>();
+    private final Map<Good,Offer> scopedOffers = new HashMap<>();
 
     public DEXService() {
     }
@@ -53,16 +57,35 @@ public class DEXService extends BaseService {
                 dexPeers = (List<NetworkPeer>)e.getValue(NetworkPeer.class.getName());
                 break;
             }
-            case OPERATION_REQUEST_OFFERS_LIST: {
-
-                break;
-            }
-            case OPERATION_RESPONSE_OFFERS_LIST: {
-
-                break;
-            }
             case OPERATION_MAKE_OFFER: {
-
+                Offer offer;
+                Object offerObj = e.getValue(Offer.class.getName());
+                if(offerObj instanceof Map) {
+                    offer = new Offer();
+                    offer.fromMap((Map<String,Object>)offerObj);
+                } else if(offerObj instanceof Offer) {
+                    offer = (Offer)offerObj;
+                } else if(offerObj instanceof String) {
+                    offer = new Offer();
+                    offer.fromJSON((String)offerObj);
+                } else {
+                    LOG.warning("Unable to determine Offer.");
+                    e.addErrorMessage("Unable to determine Offer.");
+                    deadLetter(e);
+                    return;
+                }
+                // Now Publish Offer
+                for(NetworkPeer dp : dexPeers) {
+                    Envelope request = Envelope.documentFactory();
+                    request.addNVP(Service.class.getName(), DEXService.class.getName());
+                    // Send 3rd back here so we can pull update the list of offers
+                    request.addRoute(DEXService.class.getName(), OPERATION_RESPONSE_OFFERS_LIST);
+                    // Send 2nd to I2P if available
+                    request.addRoute("ra.i2p.I2PService", "SEND");
+                    // Send 1st to Network Manager asking to forward to I2P
+                    request.addRoute("ra.networkmanager.NetworkManagerService", "SEND");
+                    send(request);
+                }
                 break;
             }
             case OPERATION_OFFER_ACCEPTED: {
