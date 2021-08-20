@@ -25,11 +25,15 @@ public class DEXService extends BaseService {
     public static final String OPERATION_REQUEST_OFFERS_LIST = "REQUEST_OFFERS_LIST";
     public static final String OPERATION_RESPONSE_OFFERS_LIST = "RESPONSE_OFFERS_LIST";
 
+    // Maker
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
     public static final String OPERATION_OFFER_ACCEPTED = "OFFER_ACCEPTED";
+    public static final String OPERATION_MAKER_ESCROWED = "MAKER_ESCROWED";
 
+    // Taker
     public static final String OPERATION_ACCEPT_OFFER = "ACCEPT_OFFER";
-    public static final String OPERATION_ACCEPTANCE_ACCEPTED = "ACCEPTANCE_ACCEPTED";
+    public static final String OPERATION_ACCEPTANCE_ACK = "ACCEPTANCE_ACK";
+    public static final String OPERATION_TAKER_ESCROWED = "TAKER_ESCROWED";
 
     private List<NetworkPeer> dexPeers;
     private List<Offer> localOffers = new ArrayList<>();
@@ -55,7 +59,11 @@ public class DEXService extends BaseService {
                 dexPeers = (List<NetworkPeer>)e.getValue(NetworkPeer.class.getName());
                 break;
             }
-            case OPERATION_MAKE_OFFER: {
+            case OPERATION_RESPONSE_OFFERS_LIST: {
+
+                break;
+            }
+            case OPERATION_MAKE_OFFER: { // Maker
                 Offer offer;
                 Object offerObj = e.getValue(Offer.class.getName());
                 if(offerObj instanceof Map) {
@@ -86,15 +94,15 @@ public class DEXService extends BaseService {
                 }
                 break;
             }
-            case OPERATION_OFFER_ACCEPTED: {
+            case OPERATION_ACCEPT_OFFER: { // Taker
 
                 break;
             }
-            case OPERATION_ACCEPT_OFFER: {
+            case OPERATION_OFFER_ACCEPTED: { // Maker
 
                 break;
             }
-            case OPERATION_ACCEPTANCE_ACCEPTED: {
+            case OPERATION_ACCEPTANCE_ACK: { // Taker
 
                 break;
             }
