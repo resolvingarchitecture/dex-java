@@ -23,7 +23,7 @@ public class DEXService extends BaseService {
     public static final String OPERATION_REQUEST_DEX_PEERS_LIST = "REQUEST_DEX_PEERS_LIST";
     public static final String OPERATION_RESPONSE_DEX_PEERS_LIST = "RESPONSE_DEX_PEERS_LIST";
     public static final String OPERATION_REQUEST_OFFERS_LIST = "REQUEST_OFFERS_LIST";
-    public static final String OPERATION_RESPONSE_OFFERS_LIST = "RESPONSE_OFFERS_LIST";
+    public static final String OPERATION_OFFER_MADE = "RESPONSE_OFFERS_LIST";
 
     // Maker
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
@@ -59,33 +59,13 @@ public class DEXService extends BaseService {
                 dexPeers = (List<NetworkPeer>)e.getValue(NetworkPeer.class.getName());
                 break;
             }
-            case OPERATION_RESPONSE_OFFERS_LIST: {
-
-                break;
-            }
             case OPERATION_MAKE_OFFER: { // Maker
-                Offer offer;
-                Object offerObj = e.getValue(Offer.class.getName());
-                if(offerObj instanceof Map) {
-                    offer = new Offer();
-                    offer.fromMap((Map<String,Object>)offerObj);
-                } else if(offerObj instanceof Offer) {
-                    offer = (Offer)offerObj;
-                } else if(offerObj instanceof String) {
-                    offer = new Offer();
-                    offer.fromJSON((String)offerObj);
-                } else {
-                    LOG.warning("Unable to determine Offer.");
-                    e.addErrorMessage("Unable to determine Offer.");
-                    deadLetter(e);
-                    return;
-                }
+                Offer offer = getOffer(e);
+                if(offer==null) return;
                 // Now Publish Offer
                 for(NetworkPeer dp : dexPeers) {
                     Envelope request = Envelope.documentFactory();
-                    request.addNVP(Service.class.getName(), DEXService.class.getName());
-                    // Send 3rd back here so we can pull update the list of offers
-                    request.addRoute(DEXService.class.getName(), OPERATION_RESPONSE_OFFERS_LIST);
+                    request.addNVP(Offer.class.getName(), offer.toMap());
                     // Send 2nd to I2P if available
                     request.addRoute("ra.i2p.I2PService", "SEND");
                     // Send 1st to Network Manager asking to forward to I2P
@@ -94,7 +74,14 @@ public class DEXService extends BaseService {
                 }
                 break;
             }
+            case OPERATION_OFFER_MADE: { // All DEX Peers
+
+                break;
+            }
             case OPERATION_ACCEPT_OFFER: { // Taker
+                Offer offer = getOffer(e);
+                if(offer==null) return;
+                Envelope request = Envelope.documentFactory();
 
                 break;
             }
@@ -117,6 +104,24 @@ public class DEXService extends BaseService {
         request.addRoute(DEXService.class.getName(), OPERATION_RESPONSE_DEX_PEERS_LIST);
         request.addRoute("ra.networkmanager.NetworkManagerService", "PEERS_BY_SERVICE");
         send(request);
+    }
+
+    private Offer getOffer(Envelope e) {
+        Offer offer = null;
+        Object offerObj = e.getValue(Offer.class.getName());
+        if(offerObj instanceof Map) {
+            offer = new Offer();
+            offer.fromMap((Map<String,Object>)offerObj);
+        } else if(offerObj instanceof Offer) {
+            offer = (Offer)offerObj;
+        } else if(offerObj instanceof String) {
+            offer = new Offer();
+            offer.fromJSON((String)offerObj);
+        } else {
+            LOG.warning("Unable to determine Offer.");
+            e.addErrorMessage("Unable to determine Offer.");
+        }
+        return offer;
     }
 
     @Override
