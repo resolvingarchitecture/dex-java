@@ -66,9 +66,7 @@ public class DEXService extends BaseService {
                 for(NetworkPeer dp : dexPeers) {
                     Envelope request = Envelope.documentFactory();
                     request.addNVP(Offer.class.getName(), offer.toMap());
-                    // Send 2nd to I2P if available
-                    request.addRoute("ra.i2p.I2PService", "SEND");
-                    // Send 1st to Network Manager asking to forward to I2P
+                    // Send to Network Manager to determine external route
                     request.addRoute("ra.networkmanager.NetworkManagerService", "SEND");
                     send(request);
                 }
