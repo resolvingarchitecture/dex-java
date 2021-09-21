@@ -63,13 +63,12 @@ public class DEXService extends BaseService {
                 Offer offer = getOffer(e);
                 if(offer==null) return;
                 // Now Publish Offer
-                for(NetworkPeer dp : dexPeers) {
-                    Envelope request = Envelope.documentFactory();
-                    request.addNVP(Offer.class.getName(), offer.toMap());
-                    // Send to Network Manager to determine external route
-                    request.addRoute("ra.networkmanager.NetworkManagerService", "SEND");
-                    send(request);
-                }
+                Envelope request = Envelope.documentFactory();
+                request.addNVP(Offer.class.getName(), offer.toMap());
+                request.addNVP(NetworkPeer.class.getName(), dexPeers);
+                // Send to Network Manager to determine external route
+                request.addRoute("ra.networkmanager.NetworkManagerService", "PUBLISH");
+                send(request);
                 break;
             }
             case OPERATION_OFFER_MADE: { // All DEX Peers
