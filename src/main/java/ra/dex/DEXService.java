@@ -66,6 +66,10 @@ public class DEXService extends BaseService {
                 Envelope request = Envelope.documentFactory();
                 request.addNVP(Offer.class.getName(), offer.toMap());
                 request.addNVP(NetworkPeer.class.getName(), dexPeers);
+                // Set End Route first (stack)
+                request.addRoute(DEXService.class.getName(), OPERATION_OFFER_MADE);
+                // Prefer a network
+                request.addExternalRoute("ra.i2p.embedded.I2PEmbeddedService", "SEND");
                 // Send to Network Manager to determine external route
                 request.addRoute("ra.networkmanager.NetworkManagerService", "PUBLISH");
                 send(request);
