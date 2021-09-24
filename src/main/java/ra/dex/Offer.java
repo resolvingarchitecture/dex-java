@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Offer implements JSONSerializable {
 
-    private List<Good> from = new ArrayList<>();
-    private List<Good> to = new ArrayList<>();
+    private Good from;
+    private Good to;
     private Method method;
 
     public Offer() {
@@ -17,30 +17,24 @@ public class Offer implements JSONSerializable {
     }
 
     public Offer(Good from, Good to, Method method) {
-        this.from.add(from);
-        this.to.add(to);
-        this.method = method;
-    }
-
-    public Offer(List<Good> from, List<Good> to, Method method) {
         this.from = from;
         this.to = to;
         this.method = method;
     }
 
-    public List<Good> getFrom() {
+    public Good getFrom() {
         return from;
     }
 
-    public void setFrom(List<Good> from) {
+    public void setFrom(Good from) {
         this.from = from;
     }
 
-    public List<Good> getTo() {
+    public Good getTo() {
         return to;
     }
 
-    public void setTo(List<Good> to) {
+    public void setTo(Good to) {
         this.to = to;
     }
 
