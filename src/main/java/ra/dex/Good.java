@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public class Good implements JSONSerializable {
 
-    private String category;
-    private String type;
-    private String clazz;
-    private UUID id;
-    private Map<String,Object> toExchange;
+    private String category; // General category of Good, e.g. Currency, to help with organization.
+    private String type; // Specific type of Good, e.g. Bitcoin, to ensure similar goods exchanged.
+    private String clazz; // Class of object in toExchange
+    private UUID id; // id separate from any id in toExchange
+    private Map<String,Object> toExchange; // the object to exchange as a map of attributes
 
     public Good() {
         this.toExchange = new HashMap<>();
@@ -22,6 +22,38 @@ public class Good implements JSONSerializable {
 
     public Good(Map<String,Object> toExchange) {
         this.toExchange = toExchange;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setToExchange(Map<String,Object> toExchange) {
