@@ -36,8 +36,11 @@ public class DEXService extends BaseService {
     public static final String OPERATION_TAKER_ESCROWED = "TAKER_ESCROWED";
 
     private List<NetworkPeer> dexPeers;
-    private List<Offer> localOffers = new ArrayList<>();
-    private final Map<Good,Offer> scopedOffers = new HashMap<>();
+
+    private Map<String,Set<Offer>> offersByCategory = new HashMap<>();
+    private Map<String,Set<Offer>> offersByType = new HashMap<>();
+    private Map<Method,Set<Offer>> offersByMethod = new HashMap<>();
+    private Map<UUID,Offer> offersById = new HashMap<>();
 
     public DEXService() {
     }
@@ -84,7 +87,8 @@ public class DEXService extends BaseService {
                     LOG.warning("No Offer sent when offered made.");
                     break;
                 }
-
+                add(offer);
+                notify(offer);
                 break;
             }
             case OPERATION_ACCEPT_OFFER: { // Taker
@@ -131,6 +135,14 @@ public class DEXService extends BaseService {
             e.addErrorMessage("Unable to determine Offer.");
         }
         return offer;
+    }
+
+    private void add(Offer offer) {
+
+    }
+
+    private void notify(Offer offer) {
+
     }
 
     @Override
