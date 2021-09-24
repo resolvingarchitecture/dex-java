@@ -61,7 +61,10 @@ public class DEXService extends BaseService {
             }
             case OPERATION_MAKE_OFFER: { // Maker
                 Offer offer = getOffer(e);
-                if(offer==null) return;
+                if(offer==null) {
+                    LOG.warning("No Offer sent when making offer.");
+                    break;
+                }
                 // Now Publish Offer
                 Envelope request = Envelope.documentFactory();
                 request.addNVP(Offer.class.getName(), offer.toMap());
@@ -76,6 +79,11 @@ public class DEXService extends BaseService {
                 break;
             }
             case OPERATION_OFFER_MADE: { // All DEX Peers
+                Offer offer = getOffer(e);
+                if(offer==null) {
+                    LOG.warning("No Offer sent when offered made.");
+                    break;
+                }
 
                 break;
             }
