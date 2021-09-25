@@ -74,8 +74,8 @@ public class DEXService extends BaseService {
                 request.addNVP(NetworkPeer.class.getName(), dexPeers);
                 // Set End Route first (stack)
                 request.addRoute(DEXService.class.getName(), OPERATION_OFFER_MADE);
-                // Prefer a network
-                request.addExternalRoute("ra.i2p.embedded.I2PEmbeddedService", "SEND");
+                // Prefer a network - provide a blank service if no preference
+                request.addExternalRoute("ra.i2p.I2PService", "SEND");
                 // Send to Network Manager to determine external route
                 request.addRoute("ra.networkmanager.NetworkManagerService", "PUBLISH");
                 send(request);
