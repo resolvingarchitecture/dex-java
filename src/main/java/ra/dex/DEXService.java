@@ -29,11 +29,15 @@ public class DEXService extends BaseService {
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
     public static final String OPERATION_OFFER_ACCEPTED = "OFFER_ACCEPTED";
     public static final String OPERATION_MAKER_ESCROWED = "MAKER_ESCROWED";
+    public static final String OPERATION_MAKER_TERMS_MET = "MAKER_TERMS_MET";
 
     // Taker
     public static final String OPERATION_ACCEPT_OFFER = "ACCEPT_OFFER";
     public static final String OPERATION_ACCEPTANCE_ACK = "ACCEPTANCE_ACK";
     public static final String OPERATION_TAKER_ESCROWED = "TAKER_ESCROWED";
+    public static final String OPERATION_TAKER_TERMS_MET = "TAKER_TERMS_MET";
+
+    public static final String OPERATION_ESCROW_CLOSED = "ESCROW_CLOSED";
 
     private List<NetworkPeer> dexPeers;
 
@@ -62,7 +66,7 @@ public class DEXService extends BaseService {
                 dexPeers = (List<NetworkPeer>)e.getValue(NetworkPeer.class.getName());
                 break;
             }
-            case OPERATION_MAKE_OFFER: { // Maker
+            case OPERATION_MAKE_OFFER: { // Maker ->
                 Offer offer = getOffer(e);
                 if(offer==null) {
                     LOG.warning("No Offer sent when making offer.");
@@ -81,7 +85,7 @@ public class DEXService extends BaseService {
                 send(request);
                 break;
             }
-            case OPERATION_OFFER_MADE: { // All DEX Peers
+            case OPERATION_OFFER_MADE: { // -> All DEX Peers
                 Offer offer = getOffer(e);
                 if(offer==null) {
                     LOG.warning("No Offer sent when offered made.");
@@ -91,18 +95,38 @@ public class DEXService extends BaseService {
                 notify(offer);
                 break;
             }
-            case OPERATION_ACCEPT_OFFER: { // Taker
+            case OPERATION_ACCEPT_OFFER: { // Taker -> Maker
                 Offer offer = getOffer(e);
                 if(offer==null) return;
                 Envelope request = Envelope.documentFactory();
 
                 break;
             }
-            case OPERATION_OFFER_ACCEPTED: { // Maker
+            case OPERATION_OFFER_ACCEPTED: { // -> Maker
 
                 break;
             }
-            case OPERATION_ACCEPTANCE_ACK: { // Taker
+            case OPERATION_ACCEPTANCE_ACK: { // -> Taker
+
+                break;
+            }
+            case OPERATION_MAKER_ESCROWED: { // Maker -> Taker
+
+                break;
+            }
+            case OPERATION_TAKER_ESCROWED: { // Taker -> Maker
+
+                break;
+            }
+            case OPERATION_MAKER_TERMS_MET: { // Maker -> Taker
+
+                break;
+            }
+            case OPERATION_TAKER_TERMS_MET: { // Taker -> Maker
+
+                break;
+            }
+            case OPERATION_ESCROW_CLOSED: { // -> Taker/Maker
 
                 break;
             }
