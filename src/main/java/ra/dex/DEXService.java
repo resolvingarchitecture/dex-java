@@ -22,8 +22,7 @@ public class DEXService extends BaseService {
     // Request Network Peers running DEX Service
     public static final String OPERATION_REQUEST_DEX_PEERS_LIST = "REQUEST_DEX_PEERS_LIST";
     public static final String OPERATION_RESPONSE_DEX_PEERS_LIST = "RESPONSE_DEX_PEERS_LIST";
-    public static final String OPERATION_REQUEST_OFFERS_LIST = "REQUEST_OFFERS_LIST";
-    public static final String OPERATION_OFFER_MADE = "RESPONSE_OFFERS_LIST";
+    public static final String OPERATION_OFFER_MADE = "OFFER_MADE";
 
     // Maker
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
