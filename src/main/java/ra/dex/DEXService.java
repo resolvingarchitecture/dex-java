@@ -27,6 +27,7 @@ public class DEXService extends BaseService {
     // Maker
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
     public static final String OPERATION_OFFER_ACCEPTED = "OFFER_ACCEPTED";
+    public static final String OPERATION_OFFER_LOCKED = "OFFER_LOCKED";
     public static final String OPERATION_MAKER_ESCROWED = "MAKER_ESCROWED";
     public static final String OPERATION_MAKER_TERMS_MET = "MAKER_TERMS_MET";
 
