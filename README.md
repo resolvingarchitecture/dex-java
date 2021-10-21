@@ -1,86 +1,63 @@
 # DEX Java
 
+## Requirements
+* Requires RA Bitcoin Service with Bitcoin (BTC) Full Node as escrow and fees use BTC minimally or also a Good when used in a BTC-Fiat exchange.
+
 ## Features
 
-### Crypto Supported
-Only Bitcoin (BTC) is supported.
-
-Increments available are based on daily (UT) volume:
-
-* 0/day: 0.01
-* 30/day: 0.001, 0.01
-* 60/day: 0.001, 0.01, 0.1
-* 90/day: 0.001, 0.01, 0.1, 1
-
-### Fiat Supported
-* AFN - Afghan Afghani
-* CNY - Chinese Yuan
-* CRC - Costa Rican Colon
-* EGP - Egyptian Pound
-* EUR - European
-* GBP - British Pound
-* IDR - Indonesian Rupiah
-* INR - Indian Rupee
-* IQD - Iraqi Dinar
-* IRR - Iranian Rial
-* ISK - Icelandic Krona
-* JPY - Japanese Yen
-* KPW - North Korean Won
-* KRW - South Korean Won
-* LBP - Lebanese Pound
-* MXN - Mexican Peso
-* NGN - Nigerian Naira
-* RUB - Russian Ruble
-* SAR - Saudi Riyal
-* USD - US Dollar
-
-### Fiat Exchange Methods Supported
-
-* Advanced Cash
-* AliPay
-* Amazon eGift Card
-* Austrialian PayID
-* Cash By Mail
-* Face-to-Face (In-Person)
-* US Postal Money Order
-* Popmoney
-* Revolut
-* SEPA
-* WeChat Pay
-* Zelle (ClearXchange)
-
-### Fees
-
-* Bitcoin Miners - varies
-* DEX - 0.5% (0.001 Free)
-
-## Processes
-
-### Request BTC for Fiat
+### Processes
 * M = Manual with UI
 * S = System
 * N = Notification in UI
 * O = Outside System
 
-1. (M) Alice->Peers: Request Exchange (to exchange BTC for Fiat)
-2. (M) Bob->Peers: Request Exchange (to exchange Fiat for BTC)
-3. (S) Alice: Match Bob's Request to Alice's Request
-4. (S) Alice: Lock Alice's Request
-5. (S) Alice->Bob: Accept Bob's Request
-   1. (S) Bob->Alice: Bob's Request already locked (alternative)
-6. (S) Bob: Lock Bob's Request
-7. (S) Bob->BTC: Establish Escrow
-8. (N) Bob->Alice: Request Accepted (Escrow Established Notification with Terms)
-9. (O) Bob satisfies terms (sends fiat)
-10. (M) Bob->Alice: Terms Met
-11. (O) Alice verifies Terms
-12. (M) Alice->Bob: Terms Met Acknowledged
-13. (S) Bob->BTC: Close Escrow
-14. (S) Bob->Peers: Bob's Request Closed
-15. (S) Bob->Alice: Escrow Closed
+#### Request Good A for Good B
+1. (M) Alice: Select Good desired (Good B) and Good offered (Good A)
+2. (M) Alice->Peers: Request Good A for Good B
+3. (M) If Good A not a currency, Community approval required (only good visible not identity) -> Community Approval Process
+4. (M) Bob: Select Good desired (Good A) and Good offered (Good B)
+5. (M) If Good B not a currency, Community approval required (only good visible not identity) -> Community Approval Process
+6. (M) Bob->Peers: Request Good B for Good A
+7. (S) Bob: Match Alice's Request to Bob's Request
+8. (S) Bob: Lock Bob's Request
+9. (S) Bob->Alice: Accept Alice's Request
+    1. (S) Alice->Bob: Alice's Request already locked by another request (alternative)
+10. (S) Alice: Lock Alice's Request
+11. (S) Alice/Bob->BTC: Establish Escrow
+12. (N) Alice->Bob: Request Accepted (Escrow Established Notification with Terms)
+13. In Parallel
+    1. If Bob part of terms
+       1. (O) Bob satisfies Terms
+       2. (M) Bob->Alice: Terms met
+       3. (O) Alice verifies terms met by Bob
+       4. (M) Alice->Bob: Terms met acknowledged
+    2. If Alice part of terms
+       1. (O) Alice satisfies terms
+       2. (M) Alice->Bob: Terms met
+       3. (O) Bob verifies terms met by Alice
+       4. (M) Bob->Alice: Terms met acknowledged
+14. (S) Alice/Bob->BTC: Close Escrow
+15. (S) Bob->Peers: Bob's Request Closed
 16. (S) Alice->Peers: Alice's Request Closed
 
-### Request Fiat for BTC
+#### Community Approval Process
+1. Good appears in list of goods requiring Community approval
+2.
+
+#### Community Rejection Process
+
+
+#### Community Approver Selection Process
+
+
+#### Judge Selection Process
+
+
+#### Supreme Judge Selection Process
+
+
+### Global Commands
+* Cancel Request - A request can be canceled any time prior to
 
 ## API
 
