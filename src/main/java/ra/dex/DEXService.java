@@ -24,14 +24,12 @@ public class DEXService extends BaseService {
     public static final String OPERATION_RESPONSE_DEX_PEERS_LIST = "RESPONSE_DEX_PEERS_LIST";
     public static final String OPERATION_OFFER_MADE = "OFFER_MADE";
 
-    // Maker
     public static final String OPERATION_MAKE_OFFER = "MAKE_OFFER";
     public static final String OPERATION_OFFER_ACCEPTED = "OFFER_ACCEPTED";
     public static final String OPERATION_OFFER_LOCKED = "OFFER_LOCKED";
     public static final String OPERATION_MAKER_ESCROWED = "MAKER_ESCROWED";
     public static final String OPERATION_MAKER_TERMS_MET = "MAKER_TERMS_MET";
 
-    // Taker
     public static final String OPERATION_ACCEPT_OFFER = "ACCEPT_OFFER";
     public static final String OPERATION_ACCEPTANCE_ACK = "ACCEPTANCE_ACK";
     public static final String OPERATION_TAKER_ESCROWED = "TAKER_ESCROWED";
@@ -39,12 +37,13 @@ public class DEXService extends BaseService {
 
     public static final String OPERATION_ESCROW_CLOSED = "ESCROW_CLOSED";
 
-    private List<NetworkPeer> dexPeers;
+    List<NetworkPeer> dexPeers;
 
-    private Map<String,Set<Offer>> offersByCategory = new HashMap<>();
-    private Map<String,Set<Offer>> offersByType = new HashMap<>();
-    private Map<Method,Set<Offer>> offersByMethod = new HashMap<>();
-    private Map<UUID,Offer> offersById = new HashMap<>();
+    private final Map<String,Set<Offer>> offersByCategory = new HashMap<>();
+    private final Map<String,Set<Offer>> offersByType = new HashMap<>();
+    private final Map<Method,Set<Offer>> offersByMethod = new HashMap<>();
+    private final Map<UUID,Offer> offersById = new HashMap<>();
+    private final Set<Offer> currentOffers = new HashSet<>();
 
     public DEXService() {
     }
@@ -91,8 +90,8 @@ public class DEXService extends BaseService {
                     LOG.warning("No Offer sent when offered made.");
                     break;
                 }
-                add(offer);
-                notify(offer);
+                if(!currentOffers.contains(offer)) // ensure we're not adding our own
+                    add(offer);
                 break;
             }
             case OPERATION_ACCEPT_OFFER: { // Taker -> Maker
@@ -165,8 +164,14 @@ public class DEXService extends BaseService {
 
     }
 
-    private void notify(Offer offer) {
+    Set<Offer> match() {
+        Set<Offer> matched = new HashSet<>();
+        for(Offer offer : currentOffers) {
+            if(offersByMethod.containsKey(offer.getMethod())) {
 
+            }
+        }
+        return matched;
     }
 
     @Override
